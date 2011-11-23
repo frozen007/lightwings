@@ -6,9 +6,11 @@ import java.io.PrintWriter;
 import java.util.LinkedList;
 
 public class ConcurrentLogPrinter extends Thread {
-    private PrintWriter log = null;
+    private PrintWriter logWritter = null;
 
     protected LinkedList<Object> printQueue = new LinkedList<Object>();
+    protected long MAX_FILE_BYTES = 20 * 1024 * 1024; //单个最大日志文件大小，默认20MB
+    private long lengthCounter = 0;
 
     private Object lock = new Object();
 
@@ -17,8 +19,7 @@ public class ConcurrentLogPrinter extends Thread {
         this.setName(this.getClass().getSimpleName());
 
         try {
-            log =
-                new PrintWriter(new FileWriter(getPath() + getLogFileName(getLogFileName()), true), true);
+            //logWritter = new PrintWriter(new FileWriter(getPath() + getLogFileName(getLogFileName()), true), true);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -39,13 +40,41 @@ public class ConcurrentLogPrinter extends Thread {
         return "log";
     }
 
+    private String getFullLogFileName(String fileName) {
+        String logFileName =
+            fileName
+                + "_"
+                + getFileSuffix()
+                + ".log";
+        return logFileName;
+    }
+
     protected String getPathName() {
-        return "applog\\";
+        return "";
     }
 
     protected void writeLog(Object o) {
-        log.println(o);
-        log.flush();
+        String str = o.toString();
+        this.lengthCounter += str.length();
+        logWritter.println(str);
+        logWritter.flush();
+
+        if(this.lengthCounter > this.MAX_FILE_BYTES) {
+            this.lengthCounter = 0;
+            try {
+                logWritter.close();
+                logWritter = null;
+            } catch (Exception e) {
+
+            }
+
+            try {
+                logWritter =
+                    new PrintWriter(new FileWriter(getPath() + getFullLogFileName(getLogFileName()), true), true);
+            } catch (Exception e) {
+
+            }
+        }
     }
     
     public void addToPrintQueue(Object o) {
@@ -81,16 +110,9 @@ public class ConcurrentLogPrinter extends Thread {
         return pathName + separator;
     }
 
-    private String getLogFileName(String fileName) {
-        String logFileName =
-            fileName
-                + "_"
-                + getFileSuffix()
-                + ".log";
-        return logFileName;
-    }
-
     protected String getFileSuffix() {
-        return "";
+        String currentTimeStr = "";
+        //String currentTimeStr = String.valueOf(TradeDate.currentSystemTimeMillis());
+        return currentTimeStr.substring(0, 8) + "_" + currentTimeStr.substring(8, 12);
     }
 }

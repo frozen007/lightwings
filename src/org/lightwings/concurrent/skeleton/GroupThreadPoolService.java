@@ -5,10 +5,10 @@ import java.util.Stack;
 
 public abstract class GroupThreadPoolService<E> extends CommonDispatchService<E> {
 
-    private Stack<WorkThread> threadPool = new Stack<WorkThread>();
-    private int poolSize = 1;
-    private Object poolLock = new Object();
-    private Object workMonitor = new Object();
+    protected Stack<WorkThread> threadPool = new Stack<WorkThread>();
+    protected int poolSize = 1;
+    protected Object poolLock = new Object();
+    protected Object workMonitor = new Object();
 
     public GroupThreadPoolService() {
         initialize();
