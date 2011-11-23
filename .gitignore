@@ -1,1 +1,4 @@
 /build
+/filter.properties
+/executeRecord.jar
+/*.log
