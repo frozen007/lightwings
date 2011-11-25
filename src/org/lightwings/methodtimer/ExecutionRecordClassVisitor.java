@@ -12,6 +12,8 @@ import org.objectweb.asm.Opcodes;
 public class ExecutionRecordClassVisitor extends ClassAdapter {
     private HashMap<String, MethodAsmInfo> asmInfoMap = null;
     private HashSet<String> methodSet = null;
+    private String className = null;
+    private String shortClassName = null;
 
     public ExecutionRecordClassVisitor(HashMap<String, MethodAsmInfo> asmInfoMap, ClassVisitor cv) {
         super(cv);
@@ -22,6 +24,17 @@ public class ExecutionRecordClassVisitor extends ClassAdapter {
         this.methodSet = methodSet;
     }
 
+    public void visit(final int version,
+        final int access,
+        final String name,
+        final String signature,
+        final String superName,
+        final String[] interfaces) {
+        className = name;
+        shortClassName = className.substring(className.lastIndexOf("/") + 1);
+        cv.visit(version, access, name, signature, superName, interfaces);
+    }
+
     public MethodVisitor visitMethod(int access,
         String name,
         String desc,
@@ -30,6 +43,7 @@ public class ExecutionRecordClassVisitor extends ClassAdapter {
         MethodVisitor mv = cv.visitMethod(access, name, desc, signature, exceptions);
         MethodAsmInfo asmInfo = asmInfoMap.get(MethodAsmInfo.genKey(access, name, desc, signature));
         if (methodSet == null || methodSet.isEmpty() || methodSet.contains(asmInfo.getKey())) {
+            System.out.println("method " + name + " ripped");
             mv = new ExecutionRecordMethodVisitor(asmInfo, mv);
         }
         return mv;
@@ -58,7 +72,7 @@ public class ExecutionRecordClassVisitor extends ClassAdapter {
         @Override
         public void visitInsn(int opcode) {
             if ((opcode >= IRETURN && opcode <= RETURN) || opcode == ATHROW) {
-                mv.visitLdcInsn(asmInfo.getName() + ":");
+                mv.visitLdcInsn(shortClassName + "." + asmInfo.getShortKey() + ":");
                 mv.visitMethodInsn(
                     INVOKESTATIC,
                     "org/lightwings/methodtimer/ExecutionRecordLogger",
@@ -77,7 +91,6 @@ public class ExecutionRecordClassVisitor extends ClassAdapter {
             }
             mv.visitInsn(opcode);
         }
-
         @Override
         public void visitMaxs(int maxStack, int maxLocals) {
             mv.visitMaxs(maxStack, maxLocals + 4);

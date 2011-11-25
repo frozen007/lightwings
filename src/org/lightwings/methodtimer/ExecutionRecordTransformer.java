@@ -21,15 +21,20 @@ public class ExecutionRecordTransformer implements ClassFileTransformer {
         Class<?> classBeingRedefined,
         ProtectionDomain protectionDomain,
         byte[] classfileBuffer) throws IllegalClassFormatException {
-        if (className.startsWith("org/lightwings/methodtimer/")) {
-            return classfileBuffer;
-        }
 
-        if (!def.isEmpty() && !def.containsKey(className)) {
-            return classfileBuffer;
+        return transformClass(className, classfileBuffer);
+    }
+
+    public byte[] transformClass(String className, byte[] classfileBuffer) {
+        if (def.isEmpty()) {
+            return null;
         }
 
         HashSet<String> methodSet = def.get(className);
+        if (methodSet == null) {
+            return null;
+        }
+        System.out.println("class " + className + " ripped.");
 
         ClassReader reader = new ClassReader(classfileBuffer);
         ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
@@ -44,5 +49,4 @@ public class ExecutionRecordTransformer implements ClassFileTransformer {
         reader.accept(executeRecordVisitor, ClassReader.SKIP_DEBUG);
         return writer.toByteArray();
     }
-
 }

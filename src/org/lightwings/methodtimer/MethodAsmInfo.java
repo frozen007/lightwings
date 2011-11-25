@@ -8,6 +8,7 @@ public class MethodAsmInfo {
     String methodKey;
     int maxStack;
     int maxLocals;
+    String shortKey;
 
     public MethodAsmInfo(int access, String name, String desc, String signature) {
         this.access = access;
@@ -15,6 +16,22 @@ public class MethodAsmInfo {
         this.desc = desc;
         this.signature = signature;
         this.methodKey = genKey(access, name, desc, signature);
+
+        StringBuilder buf = new StringBuilder();
+        buf.append(name).append(".(");
+        String[] paras = this.desc.split(";");
+        if (paras != null) {
+            for (int i = 0; i < paras.length; i++) {
+                int slashPos = paras[i].lastIndexOf("/");
+                if (slashPos > 0) {
+                    paras[i] = paras[i].substring(slashPos + 1);
+                }
+                buf.append(paras[i]).append(",");
+            }
+            buf.deleteCharAt(buf.length() - 1);
+        }
+        buf.append(")");
+        shortKey = buf.toString();
     }
 
     public String getKey() {
@@ -57,4 +74,7 @@ public class MethodAsmInfo {
         this.maxLocals = maxLocals;
     }
 
+    public String getShortKey() {
+        return this.shortKey;
+    }
 }

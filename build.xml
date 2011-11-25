@@ -111,7 +111,9 @@
         <jar destfile="${basedir}/executeRecord.jar" basedir="${classes}">
             <manifest>
                 <attribute name="Premain-Class" value="org.lightwings.methodtimer.MethodTimerAgent" />
+                <attribute name="Agent-Class" value="org.lightwings.methodtimer.MethodTimerAgent" />
                 <attribute name="Can-Redefine-Classes" value="true" />
+                <attribute name="Can-Retransform-Classes" value="true" />
             </manifest>
             <include name="org/lightwings/methodtimer/*" />
         </jar>
