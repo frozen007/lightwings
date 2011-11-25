@@ -27,10 +27,6 @@ public class MethodTimerAgent {
             def = getDefinitionFile(agentArgs);
         } catch (Exception e) {
         }
-        /*
-        inst.addTransformer(new ExecutionRecordTransformer(def));
-        inst.addTransformer(new AutoKnockServiceTransformer());
-        */
 
         ExecutionRecordTransformer transformer = new ExecutionRecordTransformer(def);
         ArrayList<ClassDefinition> classDefList = new ArrayList<ClassDefinition>();
