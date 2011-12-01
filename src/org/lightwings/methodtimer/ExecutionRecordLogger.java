@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ExecutionRecordLogger extends Thread {
-    private static final String NEW_LINE = System.getProperty("line.separator");
     private static final String log_file_name = "executionlog";
     private static Thread t = null;
     public static PrintStream out = System.out;
@@ -24,28 +23,19 @@ public class ExecutionRecordLogger extends Thread {
         t.start();
     }
 
-    public static void print(long lValue) {
-        print(String.valueOf(lValue));
+    public static void println(String methodDesc, long cost) {
+        println(methodDesc+cost);
     }
 
-    public static void print(String str) {
+    public static void println(String str) {
         queue.offer(str);
         synchronized (queue) {
             queue.notifyAll();
         }
     }
 
-    public static void println(long lValue) {
-        println(String.valueOf(lValue));
-    }
-
-    public static void println(String str) {
-        print(str);
-        print(NEW_LINE);
-    }
-
     private static void log(String str) {
-        out.print(str);
+        out.println(str);
         out.flush();
     }
 

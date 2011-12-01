@@ -46,17 +46,32 @@ public class MethodTimerAgent {
             }
         }
 
-        AutoKnockServiceTransformer autoKnockServiceHack = new AutoKnockServiceTransformer();
-        String className = "com/stock/businesslogic/returnprocessing/AutoKnockService";
-        byte[] classBytes = getClassBytes(className);
-        if (classBytes != null) {
-            classBytes = autoKnockServiceHack.transformClass(className, classBytes);
-            try {
-                ClassDefinition classDef =
-                    new ClassDefinition(Class.forName(className.replace('/', '.')), classBytes);
-                classDefList.add(classDef);
-            } catch (Exception e) {
+        HashMap<String, SimpleClassTransformer> transformPlan =
+            new HashMap<String, SimpleClassTransformer>();
+        transformPlan.put(
+            "com/stock/businesslogic/returnprocessing/AutoKnockService",
+            new AutoKnockServiceTransformer());
+        String statClass = "oracle/jdbc/driver/OraclePreparedStatement";
+        transformPlan.put(
+            statClass,
+            new JDBCStatementTransformer(statClass));
+        statClass = "oracle/jdbc/driver/T4CPreparedStatement";
+        transformPlan.put(
+            statClass,
+            new JDBCStatementTransformer(statClass));
 
+        for (String className : transformPlan.keySet()) {
+            SimpleClassTransformer transformer1 = transformPlan.get(className);
+            byte[] classBytes = getClassBytes(className);
+            if (classBytes != null) {
+                classBytes = transformer1.transformClass(className, classBytes);
+                try {
+                    ClassDefinition classDef =
+                        new ClassDefinition(Class.forName(className.replace('/', '.')), classBytes);
+                    classDefList.add(classDef);
+                } catch (Exception e) {
+
+                }
             }
         }
 
@@ -69,6 +84,11 @@ public class MethodTimerAgent {
             } catch (UnmodifiableClassException e) {
                 e.printStackTrace();
             }
+        }
+        try {
+            Class.forName("org.lightwings.methodtimer.SQLIntercepter");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
     public static byte[] getClassBytes(String className) {

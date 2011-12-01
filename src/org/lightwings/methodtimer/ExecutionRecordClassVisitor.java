@@ -73,11 +73,6 @@ public class ExecutionRecordClassVisitor extends ClassAdapter {
         public void visitInsn(int opcode) {
             if ((opcode >= IRETURN && opcode <= RETURN) || opcode == ATHROW) {
                 mv.visitLdcInsn(shortClassName + "." + asmInfo.getShortKey() + ":");
-                mv.visitMethodInsn(
-                    INVOKESTATIC,
-                    "org/lightwings/methodtimer/ExecutionRecordLogger",
-                    "print",
-                    "(Ljava/lang/String;)V");
                 mv.visitMethodInsn(INVOKESTATIC, "java/lang/System", "currentTimeMillis", "()J");
                 mv.visitVarInsn(LSTORE, endTimeSlotIndex);
                 mv.visitVarInsn(LLOAD, endTimeSlotIndex);
@@ -87,7 +82,7 @@ public class ExecutionRecordClassVisitor extends ClassAdapter {
                     INVOKESTATIC,
                     "org/lightwings/methodtimer/ExecutionRecordLogger",
                     "println",
-                    "(J)V");
+                    "(Ljava/lang/String;J)V");
             }
             mv.visitInsn(opcode);
         }

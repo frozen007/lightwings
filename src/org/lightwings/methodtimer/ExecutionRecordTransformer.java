@@ -1,28 +1,16 @@
 package org.lightwings.methodtimer;
 
-import java.lang.instrument.ClassFileTransformer;
-import java.lang.instrument.IllegalClassFormatException;
-import java.security.ProtectionDomain;
 import java.util.HashMap;
 import java.util.HashSet;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 
-public class ExecutionRecordTransformer implements ClassFileTransformer {
+public class ExecutionRecordTransformer extends SimpleClassTransformer {
     private HashMap<String, HashSet<String>> def = null;
 
     public ExecutionRecordTransformer(HashMap<String, HashSet<String>> def) {
         this.def = def;
-    }
-
-    public byte[] transform(ClassLoader loader,
-        String className,
-        Class<?> classBeingRedefined,
-        ProtectionDomain protectionDomain,
-        byte[] classfileBuffer) throws IllegalClassFormatException {
-
-        return transformClass(className, classfileBuffer);
     }
 
     public byte[] transformClass(String className, byte[] classfileBuffer) {

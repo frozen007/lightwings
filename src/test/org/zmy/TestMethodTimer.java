@@ -1,25 +1,35 @@
 package test.org.zmy;
 
 import org.lightwings.methodtimer.ExecutionRecordLogger;
-
+import org.lightwings.methodtimer.SQLIntercepter;
 
 public class TestMethodTimer {
-    public String a = "d";
+    public String a = "UPDATE DSF";
 
     public static void main(String[] args) {
-        TestMethodTimer timer =new TestMethodTimer();
+        TestMethodTimer timer = new TestMethodTimer();
         timer.hello();
+        timer.test();
 
         TestInterfaceImplSub test = new TestInterfaceImplSub();
         test.test();
     }
 
-    public Object getO(int i, Object o) {
-        return o+""+i;
+    public String getSql() {
+        return a;
     }
-    
+
+    public int[] test() {
+        if (SQLIntercepter.isIntercept(getSql())) {
+            return null;
+        }
+        int a = 0;
+        int b = 1;
+        System.out.println("sss" + (b - a));
+        return null;
+    }
+
     public void hello() {
-        ExecutionRecordLogger.print(a.hashCode());
         for (int i = 0; i < 100; i++) {
             try {
                 Thread.sleep(10);
@@ -28,6 +38,6 @@ public class TestMethodTimer {
             }
         }
 
-        System.out.println("Hello");
+        ExecutionRecordLogger.println("hello" + 101);
     }
 }

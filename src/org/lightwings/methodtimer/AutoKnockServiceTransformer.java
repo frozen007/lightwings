@@ -1,9 +1,5 @@
 package org.lightwings.methodtimer;
 
-import java.lang.instrument.ClassFileTransformer;
-import java.lang.instrument.IllegalClassFormatException;
-import java.security.ProtectionDomain;
-
 import org.objectweb.asm.ClassAdapter;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
@@ -12,16 +8,7 @@ import org.objectweb.asm.MethodAdapter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
-public class AutoKnockServiceTransformer implements ClassFileTransformer {
-
-    public byte[] transform(ClassLoader loader,
-        String className,
-        Class<?> classBeingRedefined,
-        ProtectionDomain protectionDomain,
-        byte[] classfileBuffer) throws IllegalClassFormatException {
-
-        return transformClass(className, classfileBuffer);
-    }
+public class AutoKnockServiceTransformer extends SimpleClassTransformer {
 
     public byte[] transformClass(String className, byte[] classfileBuffer) {
         if (!className.equals("com/stock/businesslogic/returnprocessing/AutoKnockService")) {
@@ -64,11 +51,6 @@ public class AutoKnockServiceTransformer implements ClassFileTransformer {
         public void visitCode() {
             mv.visitCode();
             mv.visitLdcInsn("DataPack Begin:");
-            mv.visitMethodInsn(
-                INVOKESTATIC,
-                "org/lightwings/methodtimer/ExecutionRecordLogger",
-                "print",
-                "(Ljava/lang/String;)V");
             mv.visitVarInsn(ALOAD, 0);
             mv.visitFieldInsn(
                 GETFIELD,
@@ -84,18 +66,13 @@ public class AutoKnockServiceTransformer implements ClassFileTransformer {
                 INVOKESTATIC,
                 "org/lightwings/methodtimer/ExecutionRecordLogger",
                 "println",
-                "(J)V");
+                "(Ljava/lang/String;J)V");
         }
 
         @Override
         public void visitInsn(int opcode) {
             if ((opcode >= IRETURN && opcode <= RETURN) || opcode == ATHROW) {
                 mv.visitLdcInsn("DataPack   End:");
-                mv.visitMethodInsn(
-                    INVOKESTATIC,
-                    "org/lightwings/methodtimer/ExecutionRecordLogger",
-                    "print",
-                    "(Ljava/lang/String;)V");
                 mv.visitVarInsn(ALOAD, 0);
                 mv.visitFieldInsn(
                     GETFIELD,
@@ -111,7 +88,7 @@ public class AutoKnockServiceTransformer implements ClassFileTransformer {
                     INVOKESTATIC,
                     "org/lightwings/methodtimer/ExecutionRecordLogger",
                     "println",
-                    "(J)V");
+                    "(Ljava/lang/String;J)V");
             }
             mv.visitInsn(opcode);
         }
