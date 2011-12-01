@@ -3,3 +3,4 @@
 /filter.properties
 /executeRecord.jar
 /*.log
+/sqlintercept.properties
