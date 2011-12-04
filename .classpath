@@ -6,6 +6,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
 	<classpathentry kind="lib" path="lib/jgroups-2.12.1.Final.jar" sourcepath="F:/backup/dev/jgroups/jgroups-sources.jar"/>
 	<classpathentry kind="lib" path="lib/jxl.jar"/>
-	<classpathentry kind="lib" path="lib/asm-all-3.2.jar" sourcepath="F:/backup/dev/asm-3.2/src.zip"/>
+	<classpathentry kind="lib" path="lib/asm-all-3.2.jar" sourcepath="F:/dev/kits/asm-3.3.1/src.zip"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

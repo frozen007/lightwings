@@ -4,3 +4,4 @@
 /executeRecord.jar
 /*.log
 /sqlintercept.properties
+/dbagent.jar

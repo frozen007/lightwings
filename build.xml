@@ -99,7 +99,7 @@
 
     <target name="runASMifier">
         <java classname="org.objectweb.asm.util.ASMifierClassVisitor" fork="true">
-            <arg value="test.org.zmy.TestMethodTimer" />
+            <arg value="test.org.zmy.db.TestDBOperation" />
             <classpath>
                 <pathelement path="${classes}" />
                 <path refid="dep.lib" />
@@ -130,12 +130,33 @@
         </java>
     </target>
 
+    <target name="buildDBAgent">
+        <jar destfile="${basedir}/dbagent.jar" basedir="${classes}">
+            <manifest>
+                <attribute name="Premain-Class" value="test.org.zmy.db.DBValueAgent" />
+                <attribute name="Can-Redefine-Classes" value="true" />
+                <attribute name="Can-Retransform-Classes" value="true" />
+            </manifest>
+            <include name="test/org/zmy/db/*" />
+        </jar>
+    </target>
+
+    <target name="runDBAgent" depends="buildDBAgent">
+        <java classname="test.org.zmy.db.TestDBOperation" fork="true">
+            <jvmarg value="-javaagent:dbagent.jar" />
+            <classpath>
+                <pathelement path="${classes}" />
+                <path refid="dep.lib" />
+            </classpath>
+        </java>
+    </target>
+
     <target name="javapTestClass1">
         <exec command="javap">
             <arg value="-classpath" />
             <arg value="${classes}" />
             <arg value="-verbose" />
-            <arg value="test.org.zmy.TestMethodTimer" />
+            <arg value="test.org.zmy.db.TestDBOperation" />
         </exec>
     </target>
 </project>
