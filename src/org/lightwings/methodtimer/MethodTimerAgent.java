@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import org.lightwings.asm.ClassInnovator;
+
 public class MethodTimerAgent {
 
     public static void premain(String agentArgs, Instrumentation inst) {
@@ -28,46 +30,37 @@ public class MethodTimerAgent {
         } catch (Exception e) {
         }
 
-        ExecutionRecordTransformer transformer = new ExecutionRecordTransformer(def);
+        ExecutionRecordInnovator innovator = new ExecutionRecordInnovator(def);
         ArrayList<ClassDefinition> classDefList = new ArrayList<ClassDefinition>();
         for (String className : def.keySet()) {
             try {
-                byte[] classBytes = getClassBytes(className);
-                classBytes = transformer.transformClass(className, classBytes);
+                byte[] classBytes = innovator.innovate(className);
                 if (classBytes == null) {
                     continue;
                 }
 
-                ClassDefinition classDef =
-                    new ClassDefinition(Class.forName(className.replace('/', '.')), classBytes);
+                ClassDefinition classDef = new ClassDefinition(Class.forName(className.replace('/', '.')), classBytes);
                 classDefList.add(classDef);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
-        HashMap<String, SimpleClassTransformer> transformPlan =
-            new HashMap<String, SimpleClassTransformer>();
-        transformPlan.put(
-            "com/stock/businesslogic/returnprocessing/AutoKnockService",
-            new AutoKnockServiceTransformer());
+        HashMap<String, ClassInnovator> innovatePlan = new HashMap<String, ClassInnovator>();
+        innovatePlan.put("com/stock/businesslogic/returnprocessing/AutoKnockService", new AutoKnockServiceInnovator());
         String statClass = "oracle/jdbc/driver/OraclePreparedStatement";
-        transformPlan.put(
-            statClass,
-            new JDBCStatementTransformer(statClass));
+        innovatePlan.put(statClass, new JDBCStatementInnovator(statClass));
         statClass = "oracle/jdbc/driver/T4CPreparedStatement";
-        transformPlan.put(
-            statClass,
-            new JDBCStatementTransformer(statClass));
+        innovatePlan.put(statClass, new JDBCStatementInnovator(statClass));
 
-        for (String className : transformPlan.keySet()) {
-            SimpleClassTransformer transformer1 = transformPlan.get(className);
+        for (String className : innovatePlan.keySet()) {
+            ClassInnovator transformer1 = innovatePlan.get(className);
             byte[] classBytes = getClassBytes(className);
             if (classBytes != null) {
-                classBytes = transformer1.transformClass(className, classBytes);
+                classBytes = transformer1.innovate(className);
                 try {
-                    ClassDefinition classDef =
-                        new ClassDefinition(Class.forName(className.replace('/', '.')), classBytes);
+                    ClassDefinition classDef = new ClassDefinition(Class.forName(className.replace('/', '.')),
+                                    classBytes);
                     classDefList.add(classDef);
                 } catch (Exception e) {
 
@@ -91,6 +84,7 @@ public class MethodTimerAgent {
             e.printStackTrace();
         }
     }
+
     public static byte[] getClassBytes(String className) {
         byte[] bytes = null;
         try {
@@ -121,7 +115,7 @@ public class MethodTimerAgent {
                     currentClassName = line.substring(1, line.lastIndexOf(']'));
                     def.put(currentClassName, new HashSet<String>());
                 } else if (line.startsWith("#") || line.equals("")) {
-                    //ignore
+                    // ignore
                 } else {
                     if (currentClassName != null) {
                         HashSet<String> methodSet = def.get(currentClassName);

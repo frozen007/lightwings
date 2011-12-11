@@ -3,6 +3,7 @@ package org.lightwings.methodtimer;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import org.lightwings.asm.ASMMethodInfo;
 import org.objectweb.asm.ClassAdapter;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodAdapter;
@@ -10,12 +11,12 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
 public class ExecutionRecordClassVisitor extends ClassAdapter {
-    private HashMap<String, MethodAsmInfo> asmInfoMap = null;
+    private HashMap<String, ASMMethodInfo> asmInfoMap = null;
     private HashSet<String> methodSet = null;
     private String className = null;
     private String shortClassName = null;
 
-    public ExecutionRecordClassVisitor(HashMap<String, MethodAsmInfo> asmInfoMap, ClassVisitor cv) {
+    public ExecutionRecordClassVisitor(HashMap<String, ASMMethodInfo> asmInfoMap, ClassVisitor cv) {
         super(cv);
         this.asmInfoMap = asmInfoMap;
     }
@@ -41,7 +42,7 @@ public class ExecutionRecordClassVisitor extends ClassAdapter {
         String signature,
         String[] exceptions) {
         MethodVisitor mv = cv.visitMethod(access, name, desc, signature, exceptions);
-        MethodAsmInfo asmInfo = asmInfoMap.get(MethodAsmInfo.genKey(access, name, desc, signature));
+        ASMMethodInfo asmInfo = asmInfoMap.get(ASMMethodInfo.genKey(access, name, desc, signature));
         if (methodSet == null || methodSet.isEmpty() || methodSet.contains(asmInfo.getKey())) {
             System.out.println("method " + name + " ripped");
             mv = new ExecutionRecordMethodVisitor(asmInfo, mv);
@@ -50,11 +51,11 @@ public class ExecutionRecordClassVisitor extends ClassAdapter {
     }
 
     class ExecutionRecordMethodVisitor extends MethodAdapter implements Opcodes {
-        private MethodAsmInfo asmInfo = null;
+        private ASMMethodInfo asmInfo = null;
         private int beginTimeSlotIndex;
         private int endTimeSlotIndex;
 
-        public ExecutionRecordMethodVisitor(MethodAsmInfo asmInfo, MethodVisitor mv) {
+        public ExecutionRecordMethodVisitor(ASMMethodInfo asmInfo, MethodVisitor mv) {
             super(mv);
             this.asmInfo = asmInfo;
             int maxLocals = this.asmInfo.getMaxLocals();

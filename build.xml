@@ -116,6 +116,7 @@
                 <attribute name="Can-Retransform-Classes" value="true" />
             </manifest>
             <include name="org/lightwings/methodtimer/*" />
+        	<include name="org/lightwings/asm/*" />
         </jar>
     </target>
 
@@ -138,6 +139,7 @@
                 <attribute name="Can-Retransform-Classes" value="true" />
             </manifest>
             <include name="test/org/zmy/db/*" />
+        	<include name="org/lightwings/asm/*" />
         </jar>
     </target>
 
