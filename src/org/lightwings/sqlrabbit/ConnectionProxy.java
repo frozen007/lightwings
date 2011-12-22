@@ -14,10 +14,12 @@ public abstract class ConnectionProxy implements Connection {
 
     @Override
     public PreparedStatement prepareStatement(String sql) throws SQLException {
-        return null;
+        PreparedStatement ps = this.conn.prepareStatement(sql);
+        ps = PreparedStatementProxy.createPreparedStatementProxy(ps);
+        return ps;
     }
 
-    public Connection createConnectionProxy(Connection conn) {
+    public static Connection createConnectionProxy(Connection conn) {
         //ConnectionProxy proxy =  
         return null;
     }

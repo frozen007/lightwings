@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
 import net.sf.cglib.proxy.Callback;
+import net.sf.cglib.proxy.Dispatcher;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
@@ -31,14 +32,12 @@ public class TestDBValueProxy extends TestCase {
     }
 
     public void test002() {
-        DBValue proxy = (DBValue) Enhancer.create(DBValueImpl.class, new MethodInterceptor() {
+        DBValue proxy = (DBValue) Enhancer.create(DBValue.class, new Dispatcher(){
 
             @Override
-            public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
-                proxy.invoke(impl, args);
-                return null;
-            }
-        });
+            public Object loadObject() throws Exception {
+                return new DBValueObject();
+            }});
         proxy.execute();
     }
 
