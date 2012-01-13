@@ -5,9 +5,12 @@ import java.lang.reflect.Method;
 import net.sf.cglib.proxy.CallbackHelper;
 
 public class ProxyCallbackFilter extends CallbackHelper {
+    
+    protected Object realObject = null;
 
-    public ProxyCallbackFilter(Class superclass, Class[] interfaces) {
+    public ProxyCallbackFilter(Class superclass, Class[] interfaces, Object realObject) {
         super(superclass, interfaces);
+        this.realObject = realObject;
     }
 
     @Override

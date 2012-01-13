@@ -42,12 +42,23 @@ public class TestDBValueProxy extends TestCase {
     }
 
     public void test003() {
-        Method[] ms = DBValueImpl.class.getDeclaredMethods();
+        Method[] ms = DBValueImpl.class.getMethods();
         for (int m = 0; m < ms.length; m++) {
-            Annotation[] as = ms[m].getAnnotations();
+            Object o =ms[m].getAnnotation(Override.class);
+            Annotation[] as = ms[m].getDeclaredAnnotations();
             for (int i = 0; i < as.length; i++) {
                 System.out.println(as[i].toString());
             }
         }
+    }
+
+    public void test004() {
+        DBValue dbv = (DBValue) Enhancer.create(DBValueImpl.class, new MethodInterceptor(){
+
+            @Override
+            public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
+                return proxy.invokeSuper(obj, args);
+            }});
+        dbv.execute();
     }
 }
