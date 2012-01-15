@@ -7,4 +7,8 @@ public class DBValueObject implements DBValue {
         System.out.println("This is DBValueObject");
     }
 
+    @Override
+    public void dumpvalue() {
+    }
+
 }

@@ -15,4 +15,9 @@ public abstract class DBValueProxy implements DBValue {
     public void setDBValue(DBValue db) {
         this.db = db;
     }
+
+    @Override
+    public void execute() {
+        System.out.println("This is DBValueProxy");
+    }
 }

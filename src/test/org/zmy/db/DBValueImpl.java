@@ -7,4 +7,7 @@ public class DBValueImpl implements DBValue {
 	    System.out.println("DBValueImpl");
     }
 
+    public void dumpvalue() {
+        System.out.println("DBValueImpl dumpvalue");
+    }
 }

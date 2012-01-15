@@ -5,6 +5,8 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
+import org.lightwings.sqlrabbit.ProxyCallbackFilter;
+
 import net.sf.cglib.proxy.Callback;
 import net.sf.cglib.proxy.Dispatcher;
 import net.sf.cglib.proxy.Enhancer;
@@ -60,5 +62,13 @@ public class TestDBValueProxy extends TestCase {
                 return proxy.invokeSuper(obj, args);
             }});
         dbv.execute();
+    }
+
+    public void test005() {
+        ProxyCallbackFilter callbackfilter = new ProxyCallbackFilter(DBValueProxy.class, new Class[]{DBValue.class}, new DBValueImpl());
+        DBValue dbv = (DBValue) Enhancer.create(DBValueProxy.class, new Class[] { DBValue.class }, callbackfilter,
+                        callbackfilter.getCallbacks());
+        dbv.execute();
+        dbv.dumpvalue();
     }
 }
