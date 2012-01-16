@@ -8,5 +8,6 @@
 	<classpathentry kind="lib" path="lib/asm-all-3.2.jar" sourcepath="F:/dev/kits/asm-3.3.1/src.zip"/>
 	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.18-bin.jar"/>
 	<classpathentry kind="lib" path="lib/cglib-2.2.2.jar" sourcepath="lib/cglib-src-2.2.2.jar"/>
+	<classpathentry kind="lib" path="lib/classes12_10g.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
