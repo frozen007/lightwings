@@ -20,7 +20,11 @@ public abstract class ConnectionProxy implements Connection {
     }
 
     public static Connection createConnectionProxy(Connection conn) {
-        //ConnectionProxy proxy =  
-        return null;
+        ConnectionProxy proxy =
+            (ConnectionProxy) ProxyEnhancer.create(
+                ConnectionProxy.class,
+                new Class[]{Connection.class},
+                conn);
+        return proxy;
     }
 }

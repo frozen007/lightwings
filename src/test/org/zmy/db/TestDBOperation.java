@@ -12,8 +12,8 @@ public class TestDBOperation extends DBOperation {
     public static void main(String[] args) throws Exception {
         TestDBOperation test = new TestDBOperation();
         //test.init();
-        //test.testPreparedStatementMysql();
-        test.testOracle();
+        test.testPreparedStatementMysql();
+        //test.testOracle();
 
         /*
         test.getDBValue("select");
@@ -55,7 +55,9 @@ public class TestDBOperation extends DBOperation {
         String pass = "zmyhr";
         Connection conn = DriverManager.getConnection(url, user, pass);
         System.out.println("DriverManager.getConnection");
-        PreparedStatement ps = conn.prepareStatement("SELECT * FROM pet WHERE name=?");
+        String sql = "SELECT * FROM pet WHERE name=?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps = PreparedStatementProxy.createPreparedStatementProxy(ps, sql);
         ps.setString(1, "tiantian");
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
