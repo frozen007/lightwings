@@ -15,7 +15,7 @@ public abstract class ConnectionProxy implements Connection {
     @Override
     public PreparedStatement prepareStatement(String sql) throws SQLException {
         PreparedStatement ps = this.conn.prepareStatement(sql);
-        //ps = PreparedStatementProxy.createPreparedStatementProxy(ps);
+        ps = PreparedStatementProxy.createPreparedStatementProxy(ps, sql);
         return ps;
     }
 
@@ -25,6 +25,7 @@ public abstract class ConnectionProxy implements Connection {
                 ConnectionProxy.class,
                 new Class[]{Connection.class},
                 conn);
+        proxy.setConnection(conn);
         return proxy;
     }
 }

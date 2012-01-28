@@ -5,24 +5,14 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import junit.framework.TestCase;
+
+import org.lightwings.sqlrabbit.ConnectionProxy;
 import org.lightwings.sqlrabbit.PreparedStatementProxy;
 
-public class TestDBOperation extends DBOperation {
+public class TestDBOperation extends TestCase {
 
     public static void main(String[] args) throws Exception {
-        TestDBOperation test = new TestDBOperation();
-        //test.init();
-        test.testPreparedStatementMysql();
-        //test.testOracle();
-
-        /*
-        test.getDBValue("select");
-        Class.forName("test.org.zmy.db.DBValue");
-        // Field f = DBValueImpl.class.getField("sql");
-        // System.out.println(f.get(dbv));
-         * 
-         */
-        System.out.println("End");
     }
 
     public void testOracle() throws Exception {
@@ -43,7 +33,7 @@ public class TestDBOperation extends DBOperation {
         }
         ps.close();
         conn.close();
-            
+
     }
 
     public void testPreparedStatementMysql() throws Exception {
@@ -54,10 +44,11 @@ public class TestDBOperation extends DBOperation {
         String user = "zmyhr";
         String pass = "zmyhr";
         Connection conn = DriverManager.getConnection(url, user, pass);
+        conn = ConnectionProxy.createConnectionProxy(conn);
         System.out.println("DriverManager.getConnection");
         String sql = "SELECT * FROM pet WHERE name=?";
         PreparedStatement ps = conn.prepareStatement(sql);
-        ps = PreparedStatementProxy.createPreparedStatementProxy(ps, sql);
+        // ps = PreparedStatementProxy.createPreparedStatementProxy(ps, sql);
         ps.setString(1, "tiantian");
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
