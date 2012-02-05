@@ -7,12 +7,14 @@ import java.sql.ResultSet;
 
 import junit.framework.TestCase;
 
-import org.lightwings.sqlrabbit.ConnectionProxy;
+import org.lightwings.sqlrabbit.DriverManagerInnovator;
 import org.lightwings.sqlrabbit.PreparedStatementProxy;
 
 public class TestDBOperation extends TestCase {
 
     public static void main(String[] args) throws Exception {
+        TestDBOperation test = new TestDBOperation();
+        test.testPreparedStatementMysql();
     }
 
     public void testOracle() throws Exception {
@@ -43,12 +45,13 @@ public class TestDBOperation extends TestCase {
         String url = "jdbc:mysql://localhost/mydev";
         String user = "zmyhr";
         String pass = "zmyhr";
+        System.out.println(DriverManagerInnovator.class);
         Connection conn = DriverManager.getConnection(url, user, pass);
-        conn = ConnectionProxy.createConnectionProxy(conn);
+        //conn = ConnectionProxy.createConnectionProxy(conn);
         System.out.println("DriverManager.getConnection");
         String sql = "SELECT * FROM pet WHERE name=?";
         PreparedStatement ps = conn.prepareStatement(sql);
-        // ps = PreparedStatementProxy.createPreparedStatementProxy(ps, sql);
+        //ps = PreparedStatementProxy.createPreparedStatementProxy(ps, sql);
         ps.setString(1, "tiantian");
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {

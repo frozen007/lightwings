@@ -8,6 +8,9 @@ import java.util.Comparator;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.lightwings.sqlrabbit.log.LogManager;
+import org.lightwings.sqlrabbit.log.SQLLogger;
+
 public abstract class PreparedStatementProxy implements PreparedStatement {
     protected PreparedStatement ps = null;
     protected String originalSql = null;
@@ -16,6 +19,8 @@ public abstract class PreparedStatementProxy implements PreparedStatement {
     protected Map<Integer, String> parameterMap = null;
 
     protected MessageFormat sqlformat = null;
+
+    private static SQLLogger logger = LogManager.getSQLLogger();
 
     public void setPreparedStatement(PreparedStatement ps) {
         this.ps = ps;
@@ -118,7 +123,7 @@ public abstract class PreparedStatementProxy implements PreparedStatement {
     /*TODO:Methods that implement PreparedStatement End*/
 
     protected void logExecutedSql() {
-        System.out.println(sqlformat.format(parameterMap.values().toArray()));
+        logger.log(sqlformat.format(parameterMap.values().toArray()));
     }
 
     /**

@@ -14,7 +14,7 @@ public abstract class ASMClassInnovator implements ClassInnovator {
         }
         byte[] classBytes = getClassBytes(className);
         ClassReader reader = new ClassReader(classBytes);
-        ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
+        ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
         return transformClass(className, reader, writer);
     }
 

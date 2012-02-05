@@ -6,6 +6,7 @@ import java.lang.instrument.Instrumentation;
 import java.security.ProtectionDomain;
 
 import org.lightwings.asm.ClassInnovator;
+import org.lightwings.sqlrabbit.DriverManagerInnovator;
 
 public class DBValueAgent implements ClassFileTransformer {
 

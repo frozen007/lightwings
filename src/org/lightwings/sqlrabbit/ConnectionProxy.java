@@ -18,14 +18,4 @@ public abstract class ConnectionProxy implements Connection {
         ps = PreparedStatementProxy.createPreparedStatementProxy(ps, sql);
         return ps;
     }
-
-    public static Connection createConnectionProxy(Connection conn) {
-        ConnectionProxy proxy =
-            (ConnectionProxy) ProxyEnhancer.create(
-                ConnectionProxy.class,
-                new Class[]{Connection.class},
-                conn);
-        proxy.setConnection(conn);
-        return proxy;
-    }
 }
