@@ -113,7 +113,6 @@
         <jar destfile="${basedir}/executeRecord.jar" basedir="${classes}">
             <manifest>
                 <attribute name="Premain-Class" value="org.lightwings.methodtimer.MethodTimerAgent" />
-                <attribute name="Agent-Class" value="org.lightwings.methodtimer.MethodTimerAgent" />
                 <attribute name="Can-Redefine-Classes" value="true" />
                 <attribute name="Can-Retransform-Classes" value="true" />
             </manifest>
@@ -148,6 +147,28 @@
     <target name="runDBAgent" depends="buildDBAgent">
         <java classname="test.org.zmy.db.TestDBOperation" fork="true">
             <jvmarg value="-javaagent:dbagent.jar" />
+            <classpath>
+                <pathelement path="${classes}" />
+                <path refid="dep.lib" />
+            </classpath>
+        </java>
+    </target>
+
+    <target name="buildSqlRabbit">
+        <jar destfile="${basedir}/sqlrabbit.jar" basedir="${classes}">
+            <manifest>
+                <attribute name="Premain-Class" value="org.lightwings.sqlrabbit.SqlRabbitAgent" />
+                <attribute name="Can-Redefine-Classes" value="true" />
+                <attribute name="Can-Retransform-Classes" value="true" />
+            </manifest>
+            <include name="org/lightwings/asm/**/*" />
+            <include name="org/lightwings/sqlrabbit/**/*" />
+        </jar>
+    </target>
+
+    <target name="runSqlRabbit" depends="buildSqlRabbit">
+        <java classname="test.org.zmy.db.TestDBOperation" fork="true">
+            <jvmarg value="-javaagent:sqlrabbit.jar" />
             <classpath>
                 <pathelement path="${classes}" />
                 <path refid="dep.lib" />
