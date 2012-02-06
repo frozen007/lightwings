@@ -100,8 +100,8 @@
     <target name="runASMifier">
         <java classname="org.objectweb.asm.util.ASMifierClassVisitor" fork="true">
             <!--<arg value="test.org.zmy.db.DBValueImpl" />-->
-        	<arg value="com.mysql.jdbc.ConnectionImpl" />
-        	<!--<arg value="com.mysql.jdbc.PreparedStatement" />-->
+            <arg value="com.mysql.jdbc.ConnectionImpl" />
+            <!--<arg value="com.mysql.jdbc.PreparedStatement" />-->
             <classpath>
                 <pathelement path="${classes}" />
                 <path refid="dep.lib" />
@@ -113,12 +113,11 @@
         <jar destfile="${basedir}/executeRecord.jar" basedir="${classes}">
             <manifest>
                 <attribute name="Premain-Class" value="org.lightwings.methodtimer.MethodTimerAgent" />
-                <attribute name="Agent-Class" value="org.lightwings.methodtimer.MethodTimerAgent" />
                 <attribute name="Can-Redefine-Classes" value="true" />
                 <attribute name="Can-Retransform-Classes" value="true" />
             </manifest>
             <include name="org/lightwings/methodtimer/*" />
-        	<include name="org/lightwings/asm/*" />
+            <include name="org/lightwings/asm/*" />
         </jar>
     </target>
 
@@ -141,13 +140,36 @@
                 <attribute name="Can-Retransform-Classes" value="true" />
             </manifest>
             <include name="test/org/zmy/db/*" />
-        	<include name="org/lightwings/asm/*" />
+            <include name="org/lightwings/asm/*" />
         </jar>
     </target>
 
     <target name="runDBAgent" depends="buildDBAgent">
         <java classname="test.org.zmy.db.TestDBOperation" fork="true">
             <jvmarg value="-javaagent:dbagent.jar" />
+            <classpath>
+                <pathelement path="${classes}" />
+                <path refid="dep.lib" />
+            </classpath>
+        </java>
+    </target>
+
+    <target name="buildSqlRabbit">
+        <jar destfile="${basedir}/sqlrabbit.jar" basedir="${classes}">
+            <manifest>
+                <attribute name="Premain-Class" value="org.lightwings.sqlrabbit.SqlRabbitAgent" />
+                <attribute name="Can-Redefine-Classes" value="true" />
+                <attribute name="Can-Retransform-Classes" value="true" />
+            </manifest>
+            <include name="org/lightwings/asm/**/*" />
+            <include name="org/lightwings/sqlrabbit/**/*" />
+        </jar>
+    </target>
+
+    <target name="runSqlRabbit" depends="buildSqlRabbit">
+        <java classname="test.org.zmy.db.TestDBOperation" fork="true">
+            <jvmarg value="-javaagent:sqlrabbit.jar" />
+            <jvmarg value="-Xbootclasspath/a:sqlrabbit.jar;lib/asm-all-3.2.jar;lib/cglib-2.2.2.jar" />
             <classpath>
                 <pathelement path="${classes}" />
                 <path refid="dep.lib" />

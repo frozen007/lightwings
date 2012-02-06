@@ -8,6 +8,10 @@ import java.sql.DriverManager;
 public class SqlRabbitAgent {
 
     public static void premain(String agentArgs, Instrumentation inst) {
+        new SqlRabbitAgent().doPremain(agentArgs, inst);
+    }
+
+    public void doPremain(String agentArgs, Instrumentation inst) {
         DriverManagerInnovator innovator = new DriverManagerInnovator();
         byte[] classBytes = innovator.innovate("java/sql/DriverManager");
         ClassDefinition classDef = new ClassDefinition(DriverManager.class, classBytes);
