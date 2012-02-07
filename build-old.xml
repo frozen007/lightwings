@@ -1,0 +1,197 @@
+<?xml version="1.0"?>
+<project name="lightwings">
+    <property name="classes" value="${basedir}/classes" />
+    <property name="build" value="${basedir}/build" />
+    <property name="buildclasses" value="${build}/classes" />
+    <property name="src" value="${basedir}/src" />
+    <property name="jvmversion" value="1.5" />
+
+    <path id="dep.lib">
+        <fileset dir="${basedir}/lib">
+            <include name="**/*" />
+        </fileset>
+
+        <pathelement location="F:/backup/dev/junit3.8.2/junit.jar" />
+    </path>
+
+    <target name="compile">
+        <javac destdir="${classes}" srcdir="${src}" target="${jvmversion}">
+            <include name="org/zmy/io/*.java" />
+        </javac>
+    </target>
+
+    <target name="buildzmyio">
+        <mkdir dir="${build}/zmyio/docs" />
+        <javac destdir="${classes}" srcdir="${src}" target="1.3">
+            <include name="org/zmy/io/*.java" />
+        </javac>
+        <jar destfile="${build}/zmyio/zmyio.jar" basedir="${classes}">
+            <include name="org/zmy/io/*" />
+            <fileset dir="${src}">
+                <include name="org/zmy/io/*" />
+            </fileset>
+        </jar>
+        <javadoc destdir="${build}/zmyio/docs">
+            <fileset dir="${src}">
+                <include name="org/zmy/io/*" />
+            </fileset>
+        </javadoc>
+    </target>
+
+    <target name="buildzmyutil">
+        <mkdir dir="${build}/zmyutil/docs" />
+        <javac destdir="${classes}" srcdir="${src}" target="1.5">
+            <include name="org/zmy/util/*.java" />
+        </javac>
+        <jar destfile="${build}/zmyutil/zmyutil.jar" basedir="${classes}">
+            <include name="org/zmy/util/*" />
+            <fileset dir="${src}">
+                <include name="org/zmy/util/*" />
+            </fileset>
+        </jar>
+        <javadoc destdir="${build}/zmyutil/docs">
+            <fileset dir="${src}">
+                <include name="org/zmy/util/*" />
+            </fileset>
+        </javadoc>
+    </target>
+
+    <target name="buildzmydb">
+        <mkdir dir="${build}/zmydb/docs" />
+        <javac destdir="${classes}" srcdir="${src}" target="1.5">
+            <include name="org/zmy/db/**/*.java" />
+        </javac>
+        <jar destfile="${build}/zmydb/zmydb.jar" basedir="${classes}">
+            <include name="org/zmy/db/**/*" />
+            <fileset dir="${src}">
+                <include name="org/zmy/db/**/*" />
+            </fileset>
+        </jar>
+        <javadoc destdir="${build}/zmydb/docs">
+            <fileset dir="${src}">
+                <include name="org/zmy/db/**/*" />
+            </fileset>
+        </javadoc>
+    </target>
+
+
+    <target name="buildtool">
+        <mkdir dir="${build}/tool" />
+        <javac destdir="${classes}" srcdir="${src}" target="1.5">
+            <include name="org/zmy/tool/**/*.java" />
+        </javac>
+        <jar destfile="${build}/tool/zmytool.jar" basedir="${classes}">
+            <include name="org/zmy/tool/**/*" />
+            <fileset dir="${src}">
+                <include name="org/zmy/tool/**/*" />
+            </fileset>
+        </jar>
+    </target>
+
+    <target name="buildMethodRep">
+        <jar destfile="${basedir}/repmethod.jar" basedir="${classes}" manifest="${classes}/org/zmy/test/testasm/replaceMethod/MANIFEST.MF">
+            <include name="org/zmy/test/testasm/replaceMethod/*" />
+        </jar>
+    </target>
+
+    <target name="runMethodRep">
+        <java classname="org.zmy.test.testasm.replaceMethod.TestReplaceMain" fork="true">
+            <jvmarg value="-javaagent:repmethod.jar" />
+            <classpath>
+                <pathelement path="${classes}" />
+                <pathelement location="F:/backup/dev/junit3.8.2/junit.jar" />
+                <pathelement location="F:/backup/dev/asm-3.2/lib/all/asm-all-3.2.jar" />
+            </classpath>
+        </java>
+    </target>
+
+    <target name="runASMifier">
+        <java classname="org.objectweb.asm.util.ASMifierClassVisitor" fork="true">
+            <!--<arg value="test.org.zmy.db.DBValueImpl" />-->
+            <arg value="com.mysql.jdbc.ConnectionImpl" />
+            <!--<arg value="com.mysql.jdbc.PreparedStatement" />-->
+            <classpath>
+                <pathelement path="${classes}" />
+                <path refid="dep.lib" />
+            </classpath>
+        </java>
+    </target>
+
+    <target name="buildExecuteRecord">
+        <jar destfile="${basedir}/executeRecord.jar" basedir="${classes}">
+            <manifest>
+                <attribute name="Premain-Class" value="org.lightwings.methodtimer.MethodTimerAgent" />
+                <attribute name="Can-Redefine-Classes" value="true" />
+                <attribute name="Can-Retransform-Classes" value="true" />
+            </manifest>
+            <include name="org/lightwings/methodtimer/*" />
+            <include name="org/lightwings/asm/*" />
+        </jar>
+    </target>
+
+    <target name="runExecuteRecord" depends="buildExecuteRecord">
+        <java classname="test.org.zmy.TestMethodTimer" fork="true">
+            <!---->
+            <jvmarg value="-javaagent:executeRecord.jar=filter.properties" />
+            <classpath>
+                <pathelement path="${classes}" />
+                <path refid="dep.lib" />
+            </classpath>
+        </java>
+    </target>
+
+    <target name="buildDBAgent">
+        <jar destfile="${basedir}/dbagent.jar" basedir="${classes}">
+            <manifest>
+                <attribute name="Premain-Class" value="test.org.zmy.db.DBValueAgent" />
+                <attribute name="Can-Redefine-Classes" value="true" />
+                <attribute name="Can-Retransform-Classes" value="true" />
+            </manifest>
+            <include name="test/org/zmy/db/*" />
+            <include name="org/lightwings/asm/*" />
+        </jar>
+    </target>
+
+    <target name="runDBAgent" depends="buildDBAgent">
+        <java classname="test.org.zmy.db.TestDBOperation" fork="true">
+            <jvmarg value="-javaagent:dbagent.jar" />
+            <classpath>
+                <pathelement path="${classes}" />
+                <path refid="dep.lib" />
+            </classpath>
+        </java>
+    </target>
+
+    <target name="buildSqlRabbit">
+        <jar destfile="${basedir}/sqlrabbit.jar" basedir="${classes}">
+            <manifest>
+                <attribute name="Premain-Class" value="org.lightwings.sqlrabbit.SqlRabbitAgent" />
+                <attribute name="Can-Redefine-Classes" value="true" />
+                <attribute name="Can-Retransform-Classes" value="true" />
+            </manifest>
+            <include name="org/lightwings/asm/**/*" />
+            <include name="org/lightwings/sqlrabbit/**/*" />
+        </jar>
+    </target>
+
+    <target name="runSqlRabbit" depends="buildSqlRabbit">
+        <java classname="test.org.zmy.db.TestDBOperation" fork="true">
+            <jvmarg value="-javaagent:sqlrabbit.jar" />
+            <jvmarg value="-Xbootclasspath/a:sqlrabbit.jar;lib/asm-all-3.2.jar;lib/cglib-2.2.2.jar" />
+            <classpath>
+                <pathelement path="${classes}" />
+                <path refid="dep.lib" />
+            </classpath>
+        </java>
+    </target>
+
+    <target name="javapTestClass1">
+        <exec command="javap">
+            <arg value="-classpath" />
+            <arg value="${classes}" />
+            <arg value="-verbose" />
+            <arg value="test.org.zmy.db.TestDBOperation" />
+        </exec>
+    </target>
+</project>
+
