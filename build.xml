@@ -6,6 +6,11 @@
     <property name="src" value="${basedir}/src" />
     <property name="jvmversion" value="1.5" />
 
+    <!--build for sqlintercepter-->
+    <property name="build.sqlintercepter" value="${build}/sqlintercepter" />
+    <property name="build.sqlintercepter.ver" value="0.1" />
+    <property name="build.sqlintercepter.jar" value="sqlintercepter-${build.sqlintercepter.ver}.jar" />
+
     <path id="dep.lib">
         <fileset dir="${basedir}/lib">
             <include name="**/*" />
@@ -22,7 +27,21 @@
         </javac>
     </target>
 
-    <target name="buildsqlintercepter">
+    <target name="buildsqlintercepter" depends="compile">
+        <mkdir dir="${build.sqlintercepter}" />
+        <jar destfile="${build.sqlintercepter}/${build.sqlintercepter.jar}" basedir="${buildclasses}">
+            <manifest>
+                <attribute name="Premain-Class" value="org.lightwings.sqlrabbit.SQLIntercepterAgent" />
+                <attribute name="Can-Redefine-Classes" value="true" />
+                <attribute name="Can-Retransform-Classes" value="true" />
+            </manifest>
+            <include name="org/lightwings/asm/**/*" />
+            <include name="org/lightwings/sqlrabbit/**/*" />
+        </jar>
+        <touch file="${build.sqlintercepter}/sqlintercept.properties" />
+        <echo>JVM Parameter:
+            -javaagent:${build.sqlintercepter.jar}
+        </echo>
     </target>
 </project>
 

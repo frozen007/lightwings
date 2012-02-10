@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import org.lightwings.asm.ClassInnovator;
+import org.lightwings.sqlrabbit.JDBCStatementInnovator;
 
 public class MethodTimerAgent {
 
@@ -77,11 +78,6 @@ public class MethodTimerAgent {
             } catch (UnmodifiableClassException e) {
                 e.printStackTrace();
             }
-        }
-        try {
-            Class.forName("org.lightwings.methodtimer.SQLIntercepter");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
         }
     }
 

@@ -1,4 +1,4 @@
-package org.lightwings.methodtimer;
+package org.lightwings.sqlrabbit;
 
 import org.lightwings.asm.ASMClassInnovator;
 import org.objectweb.asm.ClassAdapter;
@@ -22,7 +22,6 @@ public class JDBCStatementInnovator extends ASMClassInnovator {
         OracleStatementClassVisitor visitor = new OracleStatementClassVisitor(writer);
         reader.accept(visitor, ClassReader.SKIP_DEBUG);
 
-        System.out.println("jdbc:" + className);
         return writer.toByteArray();
     }
 
@@ -39,19 +38,21 @@ public class JDBCStatementInnovator extends ASMClassInnovator {
             String[] exceptions) {
             MethodVisitor mv = cv.visitMethod(access, name, desc, signature, exceptions);
             if (name.equals("executeUpdate") && desc.equals("()I")) {
-                mv = new ExecuteUpdateMethodVisitor(mv);
+                mv = new PreparedExecuteUpdateMethodVisitor(mv);
             } else if (name.equals("executeBatch") && desc.equals("()[I")) {
                 mv = new ExecuteBatchMethodVisitor(mv);
             } else if(name.equals("addBatch") && desc.equals("()V")) {
                 mv = new AddBatchMethodVisitor(mv);
+            } else if(name.equals("executeUpdate") && desc.equals("(Ljava/lang/String;)I")) {
+                mv = new ExecuteUpdateMethodVisitor(mv);
             }
 
             return mv;
         }
 
-        class ExecuteUpdateMethodVisitor extends MethodAdapter implements Opcodes {
+        class PreparedExecuteUpdateMethodVisitor extends MethodAdapter implements Opcodes {
 
-            public ExecuteUpdateMethodVisitor(MethodVisitor mv) {
+            public PreparedExecuteUpdateMethodVisitor(MethodVisitor mv) {
                 super(mv);
             }
 
@@ -66,7 +67,30 @@ public class JDBCStatementInnovator extends ASMClassInnovator {
                     "()Ljava/lang/String;");
                 mv.visitMethodInsn(
                     INVOKESTATIC,
-                    "org/lightwings/methodtimer/SQLIntercepter",
+                    "org/lightwings/sqlrabbit/SQLIntercepter",
+                    "isIntercept",
+                    "(Ljava/lang/String;)Z");
+                Label l0 = new Label();
+                mv.visitJumpInsn(IFEQ, l0);
+                mv.visitInsn(ICONST_1);
+                mv.visitInsn(IRETURN);
+                mv.visitLabel(l0);
+            }
+        }
+
+        class ExecuteUpdateMethodVisitor extends MethodAdapter implements Opcodes {
+
+            public ExecuteUpdateMethodVisitor(MethodVisitor mv) {
+                super(mv);
+            }
+
+            @Override
+            public void visitCode() {
+                mv.visitCode();
+                mv.visitVarInsn(ALOAD, 1);
+                mv.visitMethodInsn(
+                    INVOKESTATIC,
+                    "org/lightwings/sqlrabbit/SQLIntercepter",
                     "isIntercept",
                     "(Ljava/lang/String;)Z");
                 Label l0 = new Label();
@@ -94,7 +118,7 @@ public class JDBCStatementInnovator extends ASMClassInnovator {
                     "()Ljava/lang/String;");
                 mv.visitMethodInsn(
                     INVOKESTATIC,
-                    "org/lightwings/methodtimer/SQLIntercepter",
+                    "org/lightwings/sqlrabbit/SQLIntercepter",
                     "isIntercept",
                     "(Ljava/lang/String;)Z");
                 Label l0 = new Label();
@@ -122,7 +146,7 @@ public class JDBCStatementInnovator extends ASMClassInnovator {
                     "()Ljava/lang/String;");
                 mv.visitMethodInsn(
                     INVOKESTATIC,
-                    "org/lightwings/methodtimer/SQLIntercepter",
+                    "org/lightwings/sqlrabbit/SQLIntercepter",
                     "isIntercept",
                     "(Ljava/lang/String;)Z");
                 Label l0 = new Label();

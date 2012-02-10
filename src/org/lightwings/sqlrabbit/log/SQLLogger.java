@@ -4,4 +4,5 @@ public interface SQLLogger {
 
     public void log(String sql);
 
+    public void err(Throwable e);
 }

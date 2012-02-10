@@ -7,4 +7,9 @@ public class SystemConsoleSQLLogger implements SQLLogger {
         System.out.println(sql);
     }
 
+    @Override
+    public void err(Throwable e) {
+        e.printStackTrace();
+    }
+
 }
