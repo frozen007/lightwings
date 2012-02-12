@@ -8,6 +8,7 @@
 	<name>ligtwings</name>
 	<url>http://maven.apache.org</url>
 	<dependencies>
+	    <!-- https://oss.sonatype.org/index.html#nexus-search;quick~ -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
