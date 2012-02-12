@@ -1,7 +1,7 @@
 package test.org.zmy;
 
 import org.lightwings.methodtimer.ExecutionRecordLogger;
-import org.lightwings.methodtimer.SQLIntercepter;
+import org.lightwings.sqlrabbit.SQLIntercepter;
 
 public class TestMethodTimer {
     public String a = "UPDATE DSF";
