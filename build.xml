@@ -5,6 +5,7 @@
     <property name="buildclasses" value="${build}/classes" />
     <property name="src" value="${basedir}/src" />
     <property name="jvmversion" value="1.5" />
+    <property name="MVN_REPO" value="${user.home}/.m2/repository" />
 
     <!--build for sqlintercepter-->
     <property name="build.sqlintercepter" value="${build}/sqlintercepter" />
@@ -12,19 +13,31 @@
     <property name="build.sqlintercepter.jar" value="sqlintercepter-${build.sqlintercepter.ver}.jar" />
 
     <path id="dep.lib">
-        <fileset dir="${basedir}/lib">
-            <include name="**/*" />
-        </fileset>
+        <pathelement path="${MVN_REPO}/asm/asm-all/3.3.1/asm-all-3.3.1.jar" />
+        <pathelement path="${MVN_REPO}/cglib/cglib-nodep/2.2.2/cglib-nodep-2.2.2.jar" />
+        <pathelement path="${MVN_REPO}/org/jgroups/jgroups/2.12.1.Final/jgroups-2.12.1.Final.jar" />
+        <pathelement path="${MVN_REPO}/org/apache/mina/mina-core/1.1.7/mina-core-1.1.7.jar" />
+        <pathelement path="${MVN_REPO}/mysql/mysql-connector-java/5.1.18/mysql-connector-java-5.1.18.jar" />
+        <pathelement path="${MVN_REPO}/net/sourceforge/jexcelapi/jxl/2.6.12/jxl-2.6.12.jar" />
+        <pathelement path="${MVN_REPO}/junit/junit/3.8.2/junit-3.8.2.jar" />
     </path>
 
     <target name="compile">
         <mkdir dir="${buildclasses}" />
-        <javac destdir="${buildclasses}" srcdir="${src}" target="${jvmversion}">
+        <javac destdir="${buildclasses}" srcdir="${src}" target="${jvmversion}" encoding="GBK">
             <include name="org/**/*.java" />
             <classpath>
                 <path refid="dep.lib" />
             </classpath>
         </javac>
+    </target>
+
+    <target name="clean">
+        <delete includeemptydirs="true">
+            <fileset dir="${buildclasses}">
+                <include name="**/*" />
+            </fileset>
+        </delete>
     </target>
 
     <target name="buildsqlintercepter" depends="compile">
@@ -42,6 +55,14 @@
         <echo>JVM Parameter:
             -javaagent:${build.sqlintercepter.jar}
         </echo>
+    </target>
+
+    <target name="cleansqlintercepter" depends="clean">
+        <delete>
+            <fileset dir="${build.sqlintercepter}">
+                <include name="**/*" />
+            </fileset>
+        </delete>
     </target>
 </project>
 
