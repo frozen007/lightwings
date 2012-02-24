@@ -10,5 +10,6 @@
 	<classpathentry kind="var" path="MVN_REPO/mysql/mysql-connector-java/5.1.18/mysql-connector-java-5.1.18.jar"/>
 	<classpathentry kind="var" path="MVN_REPO/net/sourceforge/jexcelapi/jxl/2.6.12/jxl-2.6.12.jar"/>
 	<classpathentry kind="lib" path="lib/classes12_10g.jar"/>
+	<classpathentry kind="var" path="MVN_REPO/org/slf4j/slf4j-api/1.6.1/slf4j-api-1.6.1.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

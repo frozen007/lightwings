@@ -4,6 +4,8 @@ import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
 import java.util.Date;
 
+import junit.framework.TestCase;
+
 import org.apache.mina.common.ByteBuffer;
 import org.apache.mina.common.IdleStatus;
 import org.apache.mina.common.IoAcceptor;
@@ -18,7 +20,7 @@ import org.apache.mina.transport.socket.nio.SocketAcceptor;
 import org.apache.mina.transport.socket.nio.SocketAcceptorConfig;
 import org.apache.mina.transport.socket.nio.SocketSessionConfig;
 
-public class TestMina {
+public class TestMina extends TestCase {
 
     public void test001() throws Exception {
         ByteBuffer.setUseDirectBuffers(false);
