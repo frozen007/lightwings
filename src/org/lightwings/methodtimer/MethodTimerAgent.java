@@ -48,7 +48,6 @@ public class MethodTimerAgent {
         }
 
         HashMap<String, ClassInnovator> innovatePlan = new HashMap<String, ClassInnovator>();
-        innovatePlan.put("com/stock/businesslogic/returnprocessing/AutoKnockService", new AutoKnockServiceInnovator());
         String statClass = "oracle/jdbc/driver/OraclePreparedStatement";
         innovatePlan.put(statClass, new JDBCStatementInnovator(statClass));
         statClass = "oracle/jdbc/driver/T4CPreparedStatement";

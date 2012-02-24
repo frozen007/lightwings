@@ -3,7 +3,12 @@ package org.lightwings.concurrent.skeleton;
 import java.util.Collection;
 import java.util.List;
 
-
+/**
+ * CommonDispatchService
+ * A single thread service with a FIFO queue to consume type E concurrently
+ * 
+ * @author frozen007@sohu.com
+ */
 public abstract class CommonDispatchService<E> extends Thread
         implements
             DispatchService<E> {
