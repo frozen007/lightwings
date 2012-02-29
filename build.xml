@@ -4,13 +4,18 @@
     <property name="build" value="${basedir}/build" />
     <property name="buildclasses" value="${build}/classes" />
     <property name="src" value="${basedir}/src" />
-    <property name="jvmversion" value="1.5" />
+    <property name="jvmversion" value="1.6" />
     <property name="MVN_REPO" value="${user.home}/.m2/repository" />
 
     <!--build for sqlintercepter-->
     <property name="build.sqlintercepter" value="${build}/sqlintercepter" />
     <property name="build.sqlintercepter.ver" value="0.1" />
     <property name="build.sqlintercepter.jar" value="sqlintercepter-${build.sqlintercepter.ver}.jar" />
+
+    <!--build for sqlrabbit-->
+    <property name="build.sqlrabbit" value="${build}/sqlrabbit" />
+    <property name="build.sqlrabbit.ver" value="0.1" />
+    <property name="build.sqlrabbit.jar" value="sqlrabbit-${build.sqlrabbit.ver}.jar" />
 
     <path id="dep.lib">
         <pathelement path="${MVN_REPO}/asm/asm-all/3.3.1/asm-all-3.3.1.jar" />
@@ -55,6 +60,40 @@
         <echo>JVM Parameter:
             -javaagent:${build.sqlintercepter.jar}
         </echo>
+    </target>
+
+    <target name="buildsqlrabbit" depends="compile">
+        <mkdir dir="${build.sqlrabbit}" />
+        <jar destfile="${build.sqlrabbit}/${build.sqlrabbit.jar}" basedir="${buildclasses}">
+            <manifest>
+                <attribute name="Premain-Class" value="org.lightwings.sqlrabbit.SqlRabbitAgent" />
+                <attribute name="Can-Redefine-Classes" value="true" />
+                <attribute name="Can-Retransform-Classes" value="true" />
+            </manifest>
+            <include name="org/lightwings/asm/**/*" />
+            <include name="org/lightwings/sqlrabbit/**/*" />
+        </jar>
+        <copy todir="${build.sqlrabbit}" flatten="true">
+            <fileset dir="${MVN_REPO}">
+                <include name="asm/asm-all/3.3.1/asm-all-3.3.1.jar" />
+                <include name="cglib/cglib-nodep/2.2.2/cglib-nodep-2.2.2.jar" />
+            </fileset>
+        </copy>
+        <echo>JVM Parameter:
+            -javaagent:${build.sqlrabbit.jar}
+        </echo>
+    </target>
+
+    <target name="runsqlrabbit" depends="buildsqlrabbit">
+        <java classname="test.org.zmy.db.TestDBOperation" fork="true">
+            <jvmarg value="-javaagent:build/sqlrabbit/${build.sqlrabbit.jar}" />
+            <jvmarg value="-Xbootclasspath/a:build/sqlrabbit/${build.sqlrabbit.jar};build/sqlrabbit/asm-all-3.3.1.jar;build/sqlrabbit/cglib-nodep-2.2.2.jar" />
+            <classpath>
+                <pathelement path="${classes}" />
+                <path refid="dep.lib" />
+                <pathelement location="lib/classes12_10g.jar" />
+            </classpath>
+        </java>
     </target>
 
     <target name="cleansqlintercepter" depends="clean">

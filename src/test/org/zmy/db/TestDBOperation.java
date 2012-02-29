@@ -14,7 +14,8 @@ public class TestDBOperation extends TestCase {
 
     public static void main(String[] args) throws Exception {
         TestDBOperation test = new TestDBOperation();
-        test.testPreparedStatementMysql();
+        //test.testPreparedStatementMysql();
+        test.testOracle();
     }
 
     public void testOracle() throws Exception {
@@ -27,7 +28,7 @@ public class TestDBOperation extends TestCase {
         Connection conn = DriverManager.getConnection(url, user, pass);
         String sql = "SELECT * FROM account WHERE acctid=?";
         PreparedStatement ps = conn.prepareStatement(sql);
-        ps = PreparedStatementProxy.createPreparedStatementProxy(ps, sql);
+        //ps = PreparedStatementProxy.createPreparedStatementProxy(ps, sql);
         ps.setString(1, "tiantian");
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {

@@ -19,16 +19,18 @@ public class ASMMethodInfo {
 
         StringBuilder buf = new StringBuilder();
         buf.append(name).append(".(");
-        String[] paras = this.desc.split(";");
-        if (paras != null) {
-            for (int i = 0; i < paras.length; i++) {
-                int slashPos = paras[i].lastIndexOf("/");
-                if (slashPos > 0) {
-                    paras[i] = paras[i].substring(slashPos + 1);
+        if (this.desc != null) {
+            String[] paras = this.desc.split(";");
+            if (paras != null) {
+                for (int i = 0; i < paras.length; i++) {
+                    int slashPos = paras[i].lastIndexOf("/");
+                    if (slashPos > 0) {
+                        paras[i] = paras[i].substring(slashPos + 1);
+                    }
+                    buf.append(paras[i]).append(",");
                 }
-                buf.append(paras[i]).append(",");
+                buf.deleteCharAt(buf.length() - 1);
             }
-            buf.deleteCharAt(buf.length() - 1);
         }
         buf.append(")");
         shortKey = buf.toString();
