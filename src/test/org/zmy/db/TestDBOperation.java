@@ -5,17 +5,23 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import junit.framework.TestCase;
-
-import org.lightwings.sqlrabbit.DriverManagerInnovator;
 import org.lightwings.sqlrabbit.PreparedStatementProxy;
+
+import junit.framework.TestCase;
 
 public class TestDBOperation extends TestCase {
 
+    /**
+     * -javaagent:build/sqlrabbit/sqlrabbit-0.1.jar
+     * -Xbootclasspath/a:build/sqlrabbit/sqlrabbit-0.1.jar;build/sqlrabbit/asm-all-3.3.1.jar;build/sqlrabbit/cglib-nodep-2.2.2.jar
+     */
     public static void main(String[] args) throws Exception {
         TestDBOperation test = new TestDBOperation();
         //test.testPreparedStatementMysql();
-        test.testOracle();
+        while (true) {
+            test.testOracle();
+            Thread.sleep(100);
+        }
     }
 
     public void testOracle() throws Exception {
@@ -28,7 +34,7 @@ public class TestDBOperation extends TestCase {
         Connection conn = DriverManager.getConnection(url, user, pass);
         String sql = "SELECT * FROM account WHERE acctid=?";
         PreparedStatement ps = conn.prepareStatement(sql);
-        //ps = PreparedStatementProxy.createPreparedStatementProxy(ps, sql);
+        ps = PreparedStatementProxy.createPreparedStatementProxy(ps, sql);
         ps.setString(1, "tiantian");
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
@@ -46,7 +52,6 @@ public class TestDBOperation extends TestCase {
         String url = "jdbc:mysql://localhost/mydev";
         String user = "zmyhr";
         String pass = "zmyhr";
-        System.out.println(DriverManagerInnovator.class);
         Connection conn = DriverManager.getConnection(url, user, pass);
         //conn = ConnectionProxy.createConnectionProxy(conn);
         System.out.println("DriverManager.getConnection");
