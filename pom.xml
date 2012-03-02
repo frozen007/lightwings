@@ -8,7 +8,7 @@
 	<name>ligtwings</name>
 	<url>http://maven.apache.org</url>
 	<dependencies>
-	    <!-- https://oss.sonatype.org/index.html#nexus-search;quick~ -->
+		<!-- https://oss.sonatype.org/index.html#nexus-search;quick~ -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -16,11 +16,11 @@
 			<scope>test</scope>
 		</dependency>
 
-        <dependency>
-            <groupId>cglib</groupId>
-            <artifactId>cglib-nodep</artifactId>
-            <version>2.2.2</version>
-        </dependency>
+		<dependency>
+			<groupId>cglib</groupId>
+			<artifactId>cglib-nodep</artifactId>
+			<version>2.2.2</version>
+		</dependency>
 
 		<dependency>
 			<groupId>cglib</groupId>
@@ -47,11 +47,11 @@
 			<version>5.1.18</version>
 		</dependency>
 
-        <dependency>
-            <groupId>org.apache.mina</groupId>
-            <artifactId>mina-core</artifactId>
-            <version>1.1.7</version>
-        </dependency>
+		<dependency>
+			<groupId>org.apache.mina</groupId>
+			<artifactId>mina-core</artifactId>
+			<version>1.1.7</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.apache.mina</groupId>
@@ -60,11 +60,11 @@
 			<version>1.1.7</version>
 		</dependency>
 
-        <dependency>
-            <groupId>asm</groupId>
-            <artifactId>asm-all</artifactId>
-            <version>3.3.1</version>
-        </dependency>
+		<dependency>
+			<groupId>asm</groupId>
+			<artifactId>asm-all</artifactId>
+			<version>3.3.1</version>
+		</dependency>
 
 		<dependency>
 			<groupId>asm</groupId>
@@ -73,5 +73,30 @@
 			<classifier>sources</classifier>
 		</dependency>
 
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.1</version>
+        </dependency>
+
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.1</version>
+			<classifier>sources</classifier>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.6.1</version>
+			<classifier>sources</classifier>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.6.1</version>
+		</dependency>
 	</dependencies>
 </project>
