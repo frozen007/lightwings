@@ -8,4 +8,9 @@ public class Testlang extends TestCase {
         new SubBase(2);
 
     }
+
+    public void test002() {
+        System.out.println(2>>>1);
+        System.out.println(8>>2);
+    }
 }

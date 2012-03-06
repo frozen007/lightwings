@@ -12,5 +12,7 @@
 	<classpathentry kind="lib" path="lib/classes12_10g.jar"/>
 	<classpathentry kind="var" path="MVN_REPO/commons-lang/commons-lang/2.1/commons-lang-2.1.jar" sourcepath="/MVN_REPO/commons-lang/commons-lang/2.1/commons-lang-2.1-sources.jar"/>
 	<classpathentry kind="var" path="MVN_REPO"/>
+	<classpathentry kind="var" path="MVN_REPO/org/slf4j/slf4j-api/1.6.1/slf4j-api-1.6.1.jar"/>
+	<classpathentry kind="lib" path="lib/je-5.0.34.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
