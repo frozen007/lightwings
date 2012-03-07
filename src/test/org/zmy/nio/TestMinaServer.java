@@ -1,14 +1,8 @@
 package test.org.zmy.nio;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
 import java.util.Date;
-import java.util.Iterator;
 
 import junit.framework.TestCase;
 
@@ -26,9 +20,9 @@ import org.apache.mina.transport.socket.nio.SocketAcceptor;
 import org.apache.mina.transport.socket.nio.SocketAcceptorConfig;
 import org.apache.mina.transport.socket.nio.SocketSessionConfig;
 
-public class TestMina extends TestCase {
+public class TestMinaServer extends TestCase {
     public static void main(String[] args) throws Exception {
-        new TestMina().test001();
+        new TestMinaServer().test001();
     }
 
     public void test001() throws Exception {
@@ -55,6 +49,7 @@ public class TestMina extends TestCase {
 
         public void messageReceived(IoSession session, Object msg) throws Exception {
             String str = msg.toString();
+            System.out.println("Received:"+str);
             if (str.trim().equalsIgnoreCase("quit")) {
                 session.close();
                 return;
@@ -78,54 +73,5 @@ public class TestMina extends TestCase {
         }
     }
 
-    public void test002() throws Exception {
-        SocketChannel sc = SocketChannel.open();
-        sc.configureBlocking(false);
-        final Selector selector = Selector.open();
-        sc.register(selector, SelectionKey.OP_CONNECT);
-        sc.register(selector, SelectionKey.OP_READ);
-        Thread listenThread = new Thread() {
-            public void run() {
-                Charset charset = Charset.forName("GBK");
-                CharsetDecoder decoder = charset.newDecoder();
 
-                while (true) {
-                    try {
-                        int cnt = selector.select();
-                        if (cnt <= 0) {
-                            continue;
-                        }
-                        Iterator<SelectionKey> itKeys = selector.selectedKeys().iterator();
-                        while (itKeys.hasNext()) {
-                            SelectionKey key = itKeys.next();
-                            itKeys.remove();
-                            int ops = key.readyOps();
-                            if(ops == SelectionKey.OP_CONNECT) {
-                                System.out.println("Connected.");
-                            } else if(ops == SelectionKey.OP_READ) {
-                                SocketChannel sc =(SocketChannel) key.channel();
-                                ByteBuffer buffer = ByteBuffer.allocate(1024);
-                                sc.read(buffer.buf());
-                                
-                                buffer.flip();
-                                System.out.println(decoder.decode(buffer.buf()).toString());
-                            }
-                            
-                        }
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-        };
-        listenThread.start();
-        sc.connect(new InetSocketAddress("127.0.0.1", 8880));
-        sc.finishConnect();
-
-        while(true) {
-            Thread.sleep(1000);
-        }
-    }
 }

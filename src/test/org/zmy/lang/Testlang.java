@@ -12,5 +12,6 @@ public class Testlang extends TestCase {
     public void test002() {
         System.out.println(2>>>1);
         System.out.println(8>>2);
+        System.out.println(1&~4);
     }
 }
