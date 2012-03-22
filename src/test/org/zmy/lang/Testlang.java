@@ -13,6 +13,7 @@ public class Testlang extends TestCase {
         System.out.println(2>>>1);
         System.out.println(8>>2);
         System.out.println(1&~4);
+
         double f = 1;
         double a = f/100;
         System.out.println(a);
