@@ -103,5 +103,18 @@
             </fileset>
         </delete>
     </target>
+
+    <target name="runASMifier">
+        <java classname="org.objectweb.asm.util.ASMifierClassVisitor" fork="true">
+            <arg value="test.org.zmy.asm.Foo" />
+            <!--<arg value="com.mysql.jdbc.ConnectionImpl" />-->
+            <!--<arg value="com.mysql.jdbc.PreparedStatement" />-->
+            <classpath>
+                <pathelement path="${classes}" />
+                <path refid="dep.lib" />
+            </classpath>
+        </java>
+    </target>
+
 </project>
 

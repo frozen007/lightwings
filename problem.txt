@@ -1,0 +1,44 @@
+﻿about my project lightwings on github
+
+From the foundation of project lightwings, I am fascinated by trying to create a lib 
+that can exploit the real sql(without ? string) which is executed by PreparedStatement 
+in JDBC.
+
+The specific goals of the lib is as follows:
+1.User who use this lib shall not modify any code of their application.
+2.The lib shall strictly conform to the JDBC interface and doesn't depend on a 
+  specific database driver.
+3.If the JDBC interface changes, the modification of the lib shall be as little as 
+  possible.
+
+By now, the goal 1 is achieved by the Instrumentation mechanism and ASM lib. 
+Generally I change the bytecode of method DriverManager.getConnection by returning a 
+proxyed Connection object instead of original JDBC Connection, and redefine the class 
+DriverManager. (Refer to org.lightwings.sqlrabbit.ConnectionProxyMethodFactory for 
+more specifications.)
+
+The goal 2 is also easy to achieve. I create proxy objects for Connection and 
+PreparedStatement only in the JDBC interface level, so it's independent with various 
+JDBC driver.
+
+For the goal 3, in fact I really haven't got a perfect solution at the moment. The 
+key point is the way by which Connection proxy and PreparedStatement proxy object is 
+created. One way, taking the Connection proxy for example, is to create a proxy 
+class implementing Connection interface with every method being implemented and 
+delegate the invocation to the original connection object. It's simple and guaranteed
+to work, but the drawback is the strong dependancy on the interface itself. So I 
+thought out another way-create a abstract proxy class also implementing the 
+Connection interface with only some of the methods being implemented. Then the proxy 
+object can be created by CGLIB, the unimplemented methods can be generated 
+automaticly. With Callback interface in CGLIB, the delegation of invocation is also 
+can be finished(Refer to org.lightwings.sqlrabbit.PreparedStatementProxy). I didn't 
+doubt that there was any problem until I integrated it with server application. The 
+size of PermGen was increased maddly since the application started. The root cause is 
+that CGLIB define a tempory class everytime when it create proxy object, so the 
+PermGen may be insufficient if the application is still running. Before I can figure 
+out the problem caused by CGLIB, I have to turn back to first way though it's not as
+elegant as I wish. I also hope that someone can give another solution and you can 
+contact zmy1019@163.com.
+
+
+
