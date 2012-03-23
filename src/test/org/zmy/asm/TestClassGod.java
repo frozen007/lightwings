@@ -9,6 +9,8 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
+import org.objectweb.asm.util.ASMifierClassVisitor;
 
 public class TestClassGod extends ClassAdapter implements Opcodes {
 
@@ -32,7 +34,8 @@ public class TestClassGod extends ClassAdapter implements Opcodes {
         Constructor con = c.getConstructor(Bar.class);
         FooInterface fi = (FooInterface) con.newInstance(new Bar());
         fi.doFoo(100);
-        
+        Type t;
+        ASMifierClassVisitor acv;
     }
 
 

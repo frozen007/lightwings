@@ -1,6 +1,13 @@
 package test.org.zmy.lang;
 
 public class Base {
+    static {
+        System.out.println("static Base");
+    }
+
+    public static void staticBae() {
+        
+    }
 
     Base() {
         this(1);
