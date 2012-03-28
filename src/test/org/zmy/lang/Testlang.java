@@ -10,9 +10,10 @@ public class Testlang extends TestCase {
     }
 
     public void test002() throws Exception {
-        System.out.println(2>>>1);
+        System.out.println(10>>>1);
         System.out.println(8>>2);
         System.out.println(1&~4);
+        System.out.println(~1);
 
         double f = 1;
         double a = f/100;
@@ -20,6 +21,9 @@ public class Testlang extends TestCase {
 
         //System.out.println(Base.class);
         Class.forName("test.org.zmy.lang.Base");
+        long time = 20120328152701l;
+        System.out.println(time%1000000);
+        
     }
 
 }
