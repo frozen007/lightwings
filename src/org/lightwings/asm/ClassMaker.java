@@ -1,18 +1,16 @@
 package org.lightwings.asm;
 
+import java.lang.reflect.Constructor;
 import java.util.HashSet;
 
 import org.objectweb.asm.ClassAdapter;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.FieldVisitor;
-import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.Method;
-import org.zmy.util.ByteUtil;
 
 public class ClassMaker extends ClassAdapter implements Opcodes {
 
@@ -37,7 +35,10 @@ public class ClassMaker extends ClassAdapter implements Opcodes {
         this.innovatedClazz = interfaceClazz;
 
         interfaceName = Type.getInternalName(interfaceClazz);
-        className = interfaceName + "ImplBy_org_lightwings_asm_ClassMaker";
+        className =
+            "org/lightwings/db"
+                + interfaceName.substring(interfaceName.lastIndexOf('/'))
+                + "ImplBy_org_lightwings_asm_ClassMaker";
 
         proxyClassName = Type.getInternalName(proxyClazz);
         innovatedClassName = Type.getInternalName(innovatedClazz);
@@ -66,7 +67,8 @@ public class ClassMaker extends ClassAdapter implements Opcodes {
         String proxyClassInstance = getIntanceString(proxyClassName);
 
         //create a innovated field
-        cv.visitField(ACC_PUBLIC, FIELD_NAME_INNOVATED, innovatedClassInstance, null, null).visitEnd();
+        cv.visitField(ACC_PUBLIC, FIELD_NAME_INNOVATED, innovatedClassInstance, null, null)
+            .visitEnd();
 
         //create a proxy field
         cv.visitField(ACC_PUBLIC, FIELD_NAME_PROXY, proxyClassInstance, null, null).visitEnd();
@@ -195,7 +197,7 @@ public class ClassMaker extends ClassAdapter implements Opcodes {
 
         Class clazz = null;
         ClassReader cr = new ClassReader(interfaceClazz.getName());
-        ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
+        ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
         ClassMaker maker = new ClassMaker(cw, interfaceClazz, proxyClazz);
         cr.accept(maker, 0);
         ByteCodeClassLoader loader = new ByteCodeClassLoader();
@@ -203,5 +205,11 @@ public class ClassMaker extends ClassAdapter implements Opcodes {
         //ByteUtil.dumpBytesToFile("MakerTestInterfaceImplByZmy.class", classbyte);
         clazz = loader.load(maker.className.replace('/', '.'), classbyte);
         return clazz;
+    }
+
+    public static Object newInstance(Class interfaceClazz, Class proxyClazz, Object to, Object po) throws Exception {
+        Class clazz = ClassMaker.makeClass(interfaceClazz, proxyClazz);
+        Constructor con = clazz.getConstructor(interfaceClazz, proxyClazz);
+        return con.newInstance(to, po);
     }
 }

@@ -96,6 +96,28 @@
         </java>
     </target>
 
+    <target name="buildAndTestClassMakerAgent">
+        <jar destfile="${build.sqlrabbit}/classmaker.jar" basedir="${classes}">
+            <manifest>
+                <attribute name="Premain-Class" value="test.org.zmy.db.TestDBOperationAgent" />
+                <attribute name="Can-Redefine-Classes" value="true" />
+                <attribute name="Can-Retransform-Classes" value="true" />
+            </manifest>
+            <include name="**/*" />
+        </jar>
+
+        <java classname="test.org.zmy.db.TestDBOperation" fork="true">
+            <jvmarg value="-javaagent:build/sqlrabbit/classmaker.jar" />
+            <jvmarg value="-Xbootclasspath/a:build/sqlrabbit/classmaker.jar;build/sqlrabbit/asm-all-3.3.1.jar" />
+            <classpath>
+                <pathelement path="${classes}" />
+                <path refid="dep.lib" />
+                <pathelement location="lib/classes12_10g.jar" />
+            </classpath>
+        </java>
+
+    </target>
+
     <target name="cleansqlintercepter" depends="clean">
         <delete>
             <fileset dir="${build.sqlintercepter}">

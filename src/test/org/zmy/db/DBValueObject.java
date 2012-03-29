@@ -1,5 +1,8 @@
 package test.org.zmy.db;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
 public class DBValueObject implements DBValue {
 
     @Override
@@ -9,6 +12,11 @@ public class DBValueObject implements DBValue {
 
     @Override
     public void dumpvalue() {
+    }
+
+    @Override
+    public PreparedStatement prepareStatement(String sql) throws SQLException {
+        return null;
     }
 
 }

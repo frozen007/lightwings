@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import org.lightwings.asm.ClassMaker;
 import org.lightwings.sqlrabbit.PreparedStatementProxy;
 
 import junit.framework.TestCase;
@@ -18,10 +19,11 @@ public class TestDBOperation extends TestCase {
     public static void main(String[] args) throws Exception {
         TestDBOperation test = new TestDBOperation();
         //test.testPreparedStatementMysql();
-        while (true) {
-            test.testOracle();
-            Thread.sleep(100);
-        }
+//        while (true) {
+//            test.testOracle();
+//            Thread.sleep(100);
+//        }
+        test.testExecuteByClassMaker();
     }
 
     public void testOracle() throws Exception {
@@ -67,6 +69,26 @@ public class TestDBOperation extends TestCase {
         conn.close();
     }
 
+    public void testExecuteByClassMaker() throws Exception {
+        String driverName = "oracle.jdbc.driver.OracleDriver";
+        Class.forName(driverName);
+        String url = "jdbc:oracle:thin:@127.0.0.1:1521:orcl10";
+        String user = "zmy1019";
+        String pass = "zmy1019";
+        Connection conn = DriverManager.getConnection(url, user, pass);
+        //conn = (Connection) ClassMaker.newInstance(Connection.class, DBValue.class, conn, new DBValueImpl());
+        String sql = "SELECT * FROM account WHERE acctid=?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setString(1, "tiantian");
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            System.out.println(rs.getString(1) + "," + rs.getString(2) + "," + rs.getString(3));
+        }
+        ps.close();
+        conn.close();
+
+    }
+    
     public DBValue getDBValue(String sql) {
         DBValue v = null;
         // v = new DBValueImpl();

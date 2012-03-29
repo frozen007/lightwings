@@ -1,15 +1,10 @@
-package test.org.zmy.db;
+package org.lightwings.sqlrabbit.mock;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public interface DBValue {
-
-    //public String sql = "";
-
-    public void execute();
-
-    public void dumpvalue();
+public interface ConnectionMock {
 
     public PreparedStatement prepareStatement(String sql) throws SQLException;
+
 }
