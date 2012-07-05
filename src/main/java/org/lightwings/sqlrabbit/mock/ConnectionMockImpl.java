@@ -9,6 +9,7 @@ import org.lightwings.sqlrabbit.PreparedStatementProxy;
 import org.lightwings.sqlrabbit.log.LogManager;
 
 public class ConnectionMockImpl implements ConnectionMock {
+	Connection conn;
 
     @Override
     public PreparedStatement prepareStatement(String sql) throws SQLException {
